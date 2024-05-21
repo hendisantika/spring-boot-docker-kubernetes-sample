@@ -4,6 +4,7 @@ import id.my.hendisantika.k8s.entity.Employee;
 import id.my.hendisantika.k8s.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -29,4 +30,8 @@ public class EmployeeService {
         return employeeRepository.findAll();
     }
 
+    // create employee rest api
+    public Employee createEmployee(@RequestBody Employee employee) {
+        return employeeRepository.save(employee);
+    }
 }
