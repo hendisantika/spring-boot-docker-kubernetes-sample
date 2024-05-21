@@ -1,9 +1,13 @@
 package id.my.hendisantika.k8s.controller;
 
+import id.my.hendisantika.k8s.entity.Employee;
 import id.my.hendisantika.k8s.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -22,4 +26,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class EmployeeController {
 
     private final EmployeeRepository employeeRepository;
+
+    // get all employees
+    @GetMapping("/all")
+    public List<Employee> getAllEmployees() {
+        return employeeRepository.findAll();
+    }
 }
