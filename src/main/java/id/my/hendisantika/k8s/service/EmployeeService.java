@@ -1,6 +1,7 @@
 package id.my.hendisantika.k8s.service;
 
 import id.my.hendisantika.k8s.entity.Employee;
+import id.my.hendisantika.k8s.exception.ResourceNotFoundException;
 import id.my.hendisantika.k8s.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
