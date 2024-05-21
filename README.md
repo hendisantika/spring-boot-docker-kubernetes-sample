@@ -112,7 +112,7 @@ mvnw.cmd clean install -DskipTests
  ```
 
 After that, you will get the following files and directories as illustrated in the screenshot:
-![SpringBootBuild](./images/docker-kubernetes-springboot-build.png)
+![SpringBootBuild](img/package.png "Maven Package")
 
 ### Presentation of the Dockerfile
 
@@ -152,7 +152,7 @@ path (dot: current directory):
 docker build -t hendisantika/spring-boot-k8s .
 ```
 
-![DockerImage](./images/docker-kubernetes-springboot-image.png)
+![DockerImage](img/build.png "Docker Build")
 
 ### Uploading the Image to the Docker Hub
 
@@ -181,7 +181,7 @@ Push the application image to your Docker Hub repository:
 docker push lugar2020/crud-spring-boot
 ```
 
-![DockerPush](./images/docker-kubernetes-springboot-push.png)
+![DockerPush](img/push.png "Docker Push")
 
 ### Deploying the Application
 
