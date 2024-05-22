@@ -24,7 +24,7 @@ spec:
             - name: DB_HOST
               value: mysqldb
             - name: DB_NAME
-              value: crud-db
+              value: employeeDB
             - name: DB_USERNAME
               value: root
             - name: DB_PASSWORD

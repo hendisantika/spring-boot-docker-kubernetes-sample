@@ -126,10 +126,18 @@ The Dockerfile is used to create a Docker image of our application. Actually, it
 - Provide the **entry point** (command to run the App), it's equivalent to `java -jar /app.jar`.
 
 ```
-FROM openjdk:11
+# Use a base image with Java 21
+FROM bellsoft/liberica-openjdk-debian:21
+LABEL authors="hendisantika"
+
+# Copy the JAR package into the image
 ARG JAR_FILE=target/*.jar
 COPY ${JAR_FILE} app.jar
+
+# Expose the application port
 EXPOSE 8080
+
+# Run the App
 ENTRYPOINT ["java", "-jar", "/app.jar"]
 ```
 

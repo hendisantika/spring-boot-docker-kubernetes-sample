@@ -24,4 +24,4 @@ spec:
             - name: MYSQL_ROOT_PASSWORD
               value: Password123
             - name: MYSQL_DATABASE
-              value: crud-db
+              value: employeeDB
