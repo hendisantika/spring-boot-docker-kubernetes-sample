@@ -186,7 +186,7 @@ docker images
 Push the application image to your Docker Hub repository:
 
 ```
-docker push lugar2020/crud-spring-boot
+docker push hendisantika/spring-boot-k8s
 ```
 
 ![DockerPush](img/push.png "Docker Push")
@@ -289,13 +289,13 @@ Once deployed, feel free to run the following command to display all Kubernetes 
 kubectl get all
 ```
 
-![KubernetesResources](./images/docker-kubernetes-springboot-resources.png)
+![KubernetesResources](img/pods.png "K8S Pods")
 
 Finally, we can open the App once exposed outside the cluster with the script `./expose.sh` which uses
 the [port forwarding method](https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-application-cluster/)
 to serve it on **localhost** using the port **4646**.
 
-![ClusterExposedOnLocalhost](./images/kube-cluster-exposed-on-localhost.png)
+![ClusterExposedOnLocalhost](img/expose.png "Expose Service")
 
 ## Environment Variables
 
