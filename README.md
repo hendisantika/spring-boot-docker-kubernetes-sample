@@ -311,6 +311,54 @@ spring.datasource.username=${DB_USERNAME}
 spring.datasource.password=${DB_PASSWORD}
 ```
 
+Enable Kubernetes
+
+![Enable Kubernetes](img/enable.png "Enable Kubernetes")
+
+Kubernetes Dashboard
+
+![Kubernetes Dashboard](img/dashboard.png "Kubernetes Dashboard")
+
+Open your favorite browser: http://127.0.0.1:4646/employees/all
+
+```shell
+// 20240523192749
+// http://127.0.0.1:4646/employees/all
+
+[
+  {
+    "id": 1,
+    "firstName": "Itadori",
+    "lastName": "Yuji",
+    "emailId": "yuji@yopmail.com"
+  },
+  {
+    "id": 2,
+    "firstName": "Fushiguro",
+    "lastName": "Megumi",
+    "emailId": "megumi@yopmail.com"
+  },
+  {
+    "id": 3,
+    "firstName": "Satoru",
+    "lastName": "Gojo",
+    "emailId": "gojo@yopmail.com"
+  },
+  {
+    "id": 4,
+    "firstName": "Aoi",
+    "lastName": "Todo",
+    "emailId": "todo@yopmail.com"
+  },
+  {
+    "id": 5,
+    "firstName": "Ryomen",
+    "lastName": "Sukuna",
+    "emailId": "sukuna@yopmail.com"
+  }
+]
+```
+
 For a production grade application, the way to provide these variables could differ but the general idea remains passing
 them to the App.
 
