@@ -1,14 +1,14 @@
 name: Spring Boot K8s application workflow
 on:
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
     paths:
       - 'src/**'
       - '.github/workflows/app-workflow.yml'
       - 'pom.xml'
       - 'Dockerfile'
   push:
-    branches: [ master ]
+    branches: [ main ]
     paths:
       - 'src/**'
       - '.github/workflows/app-workflow.yml'
@@ -41,7 +41,7 @@ jobs:
         run: mvn clean --batch-mode --update-snapshots verify
 
   docker-build:
-    if: ${{ github.ref == 'refs/heads/master' }}
+    if: ${{ github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     needs:
       - project-build
