@@ -17,7 +17,6 @@ updates:
     commit-message:
       prefix: "chore(deps)"
       prefix-development: "chore(deps-dev)"
-      include: scope
     groups:
       spring-boot:
         patterns:
@@ -49,7 +48,6 @@ updates:
       - github_actions
     commit-message:
       prefix: "ci(deps)"
-      include: scope
     groups:
       github-actions:
         patterns:
@@ -71,7 +69,6 @@ updates:
       - docker
     commit-message:
       prefix: "build(deps)"
-      include: scope
     ignore:
       # Stay on the current Java LTS line (25); bump major manually.
       - dependency-name: "bellsoft/liberica-openjdk-debian"
