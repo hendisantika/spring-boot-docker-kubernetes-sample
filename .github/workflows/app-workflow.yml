@@ -14,6 +14,7 @@ on:
       - '.github/workflows/app-workflow.yml'
       - 'pom.xml'
       - 'Dockerfile'
+  workflow_dispatch:
 
 jobs:
   project-build:
@@ -21,24 +22,15 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - name: Set up JDK 21
+      - name: Set up JDK 25
         uses: actions/setup-java@v6.1.0
         with:
-          java-version: '21'
+          java-version: '25'
           distribution: 'corretto'
+          cache: maven
 
-      - name: Set up the Maven dependencies caching
-        uses: actions/cache@v6
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-
-      - name: Install Maven dependencies
-        run: mvn clean install
-
-      - name: Run tests
-        run: mvn clean --batch-mode --update-snapshots verify
+      - name: Build & run tests
+        run: mvn --batch-mode --update-snapshots clean verify
 
   docker-build:
     if: ${{ github.ref == 'refs/heads/main' }}
@@ -48,18 +40,15 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - name: Set up JDK 21
+      - name: Set up JDK 25
         uses: actions/setup-java@v6.1.0
         with:
-          java-version: '21'
+          java-version: '25'
           distribution: 'corretto'
+          cache: maven
 
-      - name: Cache Maven packages
-        uses: actions/cache@v6
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
+      - name: Package application jar
+        run: mvn --batch-mode -DskipTests clean package
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v4
@@ -82,11 +71,11 @@ jobs:
           context: .
           file: Dockerfile
           push: true
-          labels: ${{ steps.meta.outputs.labels }}
-          tags: hendisantika/springboot-k8s-sample:${{ github.run_number }}
+          tags: |
+            hendisantika/springboot-k8s-sample:${{ github.run_number }}
+            hendisantika/springboot-k8s-sample:latest
           build-args: |
             GIT_VERSION_TAG=${{ env.RELEASE_VERSION }}
-            GIT_COMMIT_MESSAGE=${{ github.event.head_commit.message }}
             GIT_VERSION_HASH=${{ github.sha }}
 
 #  deploy:

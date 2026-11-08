@@ -1,5 +1,5 @@
-# Use a base image with Java 21
-FROM bellsoft/liberica-openjdk-debian:21
+# Use a base image with Java 25
+FROM bellsoft/liberica-openjdk-debian:25
 LABEL authors="hendisantika"
 
 # Copy the JAR package into the image
