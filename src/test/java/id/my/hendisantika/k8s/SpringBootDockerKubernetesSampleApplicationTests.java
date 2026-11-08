@@ -32,7 +32,6 @@ class SpringBootDockerKubernetesSampleApplicationTests {
     @Test
     void createNewBook() {
         Employee employee = new Employee();
-        employee.setId(1L);
         employee.setFirstName("Itadori");
         employee.setLastName("Yuji");
         employee.setEmailId("yuji@yopmail.com");
