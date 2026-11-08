@@ -1,5 +1,24 @@
 # Deploying a Spring Boot App with Docker in a Kubernetes Cluster
 
+[![Spring Boot K8s application workflow](https://github.com/hendisantika/spring-boot-docker-kubernetes-sample/actions/workflows/app-workflow.yml/badge.svg)](https://github.com/hendisantika/spring-boot-docker-kubernetes-sample/actions/workflows/app-workflow.yml)
+![Java](https://img.shields.io/badge/Java-25-orange?logo=openjdk)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.1-brightgreen?logo=springboot)
+![MySQL](https://img.shields.io/badge/MySQL-9.5-blue?logo=mysql)
+![Dependabot](https://img.shields.io/badge/Dependabot-enabled-025E8C?logo=dependabot)
+
+## Tech Stack
+
+| Component        | Version / Tool                                   |
+|------------------|--------------------------------------------------|
+| Java             | **JDK 25** (Amazon Corretto in CI, Liberica in Docker) |
+| Framework        | Spring Boot 4.1 (Web, Data JPA, DevTools)        |
+| Database         | MySQL 9.5                                        |
+| Testing          | JUnit 5 + Testcontainers 2 (MySQL)               |
+| Build            | Maven (wrapper included)                         |
+| Container        | Docker (`bellsoft/liberica-openjdk-debian:25`)   |
+| Orchestration    | Kubernetes                                       |
+| CI/CD            | GitHub Actions + Dependabot                      |
+
 ## Introduction
 
 In the modern application ecosystem, it is becoming increasingly common to use technologies like **Docker** and *
@@ -11,7 +30,7 @@ way along with a practical sample using **Java** programming language.
 
 [![DockerImage](img/k8s.png "K8s")
 
-Moving to the following sections, we assume that you have **Java (OpenJDK 21), Docker, and Kubernetes** properly
+Moving to the following sections, we assume that you have **Java (JDK 25), Docker, and Kubernetes** properly
 installed on your computer.
 
 ## Docker
@@ -111,6 +130,13 @@ The following works for **Windows** instead:
 mvnw.cmd clean install -DskipTests
  ```
 
+To compile **and run the integration tests** (Testcontainers spins up a real MySQL container, so Docker must be
+running):
+
+```
+./mvnw clean verify
+```
+
 After that, you will get the following files and directories as illustrated in the screenshot:
 ![SpringBootBuild](img/package.png "Maven Package")
 
@@ -118,16 +144,16 @@ After that, you will get the following files and directories as illustrated in t
 
 The Dockerfile is used to create a Docker image of our application. Actually, it contains instructions to:
 
-- Set the **Java version** to use (OpenJDK 11).
+- Set the **Java version** to use (JDK 25).
 - Specify the folder in which the executable **Jar** file should be found at.
 - Rename the jar file to **app.jar**.
-- Expose the port **8020** defined in the `applications.properties` file that Spring-Boot embedded Tomcat server will
+- Expose the port **8080** defined in the `application.properties` file that Spring-Boot embedded Tomcat server will
   use to run the App.
 - Provide the **entry point** (command to run the App), it's equivalent to `java -jar /app.jar`.
 
 ```
-# Use a base image with Java 21
-FROM bellsoft/liberica-openjdk-debian:21
+# Use a base image with Java 25
+FROM bellsoft/liberica-openjdk-debian:25
 LABEL authors="hendisantika"
 
 # Copy the JAR package into the image
@@ -208,7 +234,7 @@ Together, the service file and the deployment file define the behavior of the Ku
 
 In our case, the deployment `app-deploy.yml` file will allow to deploy our Spring-Boot App (we will use the image
 previously pushed on the docker hub) in the cluster and the `mysql-deploy.yml` file will do the same for MySQL (an
-existing image will be used for MySQL: **mysql:5.7**). The `mysql-service.yml` file makes our database accessible inside
+existing image will be used for MySQL: **mysql:9.5.0**). The `mysql-service.yml` file makes our database accessible inside
 the cluster, the `app-service.yml` allow our Spring-Boot App to be accessible for users outside the cluster.
 
 The `app-deploy.yml` file looks like the following:
@@ -358,6 +384,32 @@ Open your favorite browser: http://127.0.0.1:4646/employees/all
   }
 ]
 ```
+
+## Continuous Integration (GitHub Actions)
+
+The workflow [`.github/workflows/app-workflow.yml`](.github/workflows/app-workflow.yml) runs on every push and pull
+request to `main` that touches `src/**`, `pom.xml`, `Dockerfile` or the workflow itself (and can be triggered manually
+via **workflow_dispatch**):
+
+1. **project-build** — sets up **JDK 25 (Corretto)** with Maven caching and runs `mvn clean verify` (unit +
+   Testcontainers integration tests).
+2. **docker-build** — only on `main`: packages the jar, builds the image with Buildx and pushes it to Docker Hub as
+   `hendisantika/springboot-k8s-sample:<run_number>` and `:latest`.
+
+Required repository secrets: `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN`.
+
+## Dependency Updates (Dependabot)
+
+[`.github/dependabot.yml`](.github/dependabot.yml) keeps the project up to date automatically:
+
+| Ecosystem      | Schedule (Asia/Jakarta) | Grouping                                                        | Commit prefix   |
+|----------------|-------------------------|-----------------------------------------------------------------|-----------------|
+| Maven          | daily 05:00             | `spring-boot`, `testcontainers`, other minor/patch updates      | `chore(deps)`   |
+| GitHub Actions | weekly, Monday 05:00    | all actions in one PR                                           | `ci(deps)`      |
+| Docker         | weekly, Monday 05:00    | base image (major JDK bumps are ignored and done manually)      | `build(deps)`   |
+
+Every Dependabot PR is labeled (`dependencies` + ecosystem label) and assigned to the maintainer, and is verified by the
+CI workflow above before merging.
 
 For a production grade application, the way to provide these variables could differ but the general idea remains passing
 them to the App.
